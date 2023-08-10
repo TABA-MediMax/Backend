@@ -21,15 +21,16 @@ public class TritonService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            // MULITPART_FORM_DATA 에 대해서 좀 더 공부
+            // MULITPART_FORM_DATA 에 대해서 좀 더 공부해야될듯
             HttpEntity<byte[]> requestEntity = new HttpEntity<>(imageBytes, headers);
 
-            //
+            //response 는 json ? 
             ResponseEntity<String> response = restTemplate.postForEntity(TRITON_URL, requestEntity, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 String responseBody = response.getBody();
-                // 여기서 responseBody를 처리하거나 로깅할 수 있음
+                //이부분 마무리
+                
             } else {
                 // 에러 처리 -> 파일 없음 출력
             }
