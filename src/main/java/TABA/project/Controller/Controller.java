@@ -25,14 +25,23 @@ public class Controller {
 
     @PostMapping("/imageupload")
     public String uploadImage(@RequestParam("imageFile") MultipartFile imageFile) {
+        /*
+        public String uploadImage(@RequestParam("base64Image") String base64Image){
+
+         imageResponse=imageResponse.sendImageToTritonServer(base64Image)
+
+         imageResponse.setType("json");
+
+          }
+
+         */
+
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setDl_company("경동제약(주)");
         imageResponse.setItem_seq("200902301");
         imageResponse.setDl_name("그날엔정");
-        imageResponse.setType("json");   // Triton 부분이 아직 미완성이라서 일단 임시로 이렇게 해놓음
-
-        // Trtion 이 완성되면
-
+        imageResponse.setType("json");
+        // Triton 부분이 아직 미완성이라서 일단 임시로 이렇게 해놓음
 
 
         String jsonResponse = informationService.sendInformation(imageResponse);

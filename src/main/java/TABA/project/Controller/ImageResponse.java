@@ -6,16 +6,9 @@ public class ImageResponse {
     private String dl_company;
     private String item_seq;
 
-    private String ServiceKey;
+
 
     private String type;
-    public String getServiceKey() {
-
-        return ServiceKey;
-    }
-    public void setServiceKey(String ServiceKey) {
-        this.ServiceKey = ServiceKey;
-    }
 
     public void setType(String type){
         this.type=type;
