@@ -1,9 +1,6 @@
 package TABA.project.controller;
 
-import TABA.project.service.ImageService;
-import TABA.project.service.TritonService;
-import TABA.project.service.InformationService;
-import TABA.project.service.textSearchService;
+import TABA.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,18 +11,20 @@ import java.io.IOException;
 
 @RestController
 public class Controller {
-
+    private final OAuthService oAuthService;
     private final TritonService tritonService;
     private final InformationService informationService;
     private final textSearchService textSearchService;
     private final ImageService imageService;
 
     @Autowired
-    public Controller(TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService) {
+    public Controller(OAuthService oAuthService, OAuthService oAuthService1, TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService) {
+        this.oAuthService = oAuthService1;
         this.tritonService = tritonService;
         this.informationService = informationService;
-        this.textSearchService = textSearchService; // 주입해주세요
+        this.textSearchService = textSearchService;
         this.imageService = imageService;
+
     }
 
     @PostMapping("/imageUpload")
@@ -42,8 +41,8 @@ public class Controller {
         */
 
         //이미지 파일 S3에 업로드
-        String url = imageService.uploadFileToS3(imageFile);
-        System.out.println(url);
+      // String url = imageService.uploadFileToS3(imageFile);
+       // System.out.println(url);
 
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setDl_company("경동제약(주)");
@@ -67,4 +66,17 @@ public class Controller {
         // 검색 결과를 그대로 반환
         return searchResponse;
     }
+    @PostMapping("/kakao")
+    public void kakaoCallback(@RequestParam String code) {
+
+        String accessToken = oAuthService.getKakaoAccessToken(code);
+
+        // 액세스 토큰을 사용하여 사용자 정보 조회
+        try {
+            oAuthService.createKakaoUser(accessToken);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
