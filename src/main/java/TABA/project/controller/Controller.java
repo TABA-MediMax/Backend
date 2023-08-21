@@ -1,8 +1,12 @@
 package TABA.project.controller;
 
+import TABA.project.domain.Member;
 import TABA.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,14 +21,16 @@ public class Controller {
     private final textSearchService textSearchService;
     private final ImageService imageService;
 
+    private final MemberService memberService;
+
     @Autowired
-    public Controller(OAuthService oAuthService, OAuthService oAuthService1, TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService) {
+    public Controller(OAuthService oAuthService, OAuthService oAuthService1, TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService, MemberService memberService) {
         this.oAuthService = oAuthService1;
         this.tritonService = tritonService;
         this.informationService = informationService;
         this.textSearchService = textSearchService;
         this.imageService = imageService;
-
+        this.memberService = memberService;
     }
 
     @PostMapping("/imageUpload")
@@ -78,5 +84,21 @@ public class Controller {
             e.printStackTrace();
         }
     }
+    @PostMapping("/signup")
+    public ResponseEntity<String> signUp(@RequestBody Member request) {
+        if (request.getNickName() == null || request.getEmail() == null) {
+            return ResponseEntity.badRequest().body("닉네임과 이메일은 필수 정보입니다.");
+        }
+
+        if (memberService.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 이메일입니다.");
+        }
+
+        Member newMember = memberService.signUp(request.getNickName(), request.getEmail());
+        return ResponseEntity.ok("회원 등록이 완료되었습니다.");
+    }
+
+
+
 
 }

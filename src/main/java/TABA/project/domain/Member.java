@@ -18,7 +18,7 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickName; //
+    private String nickName;
     private String email;
 
     // 생성자 추가 (필요한 경우)
