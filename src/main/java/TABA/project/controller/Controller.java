@@ -30,16 +30,16 @@ public class Controller {
 
     @PostMapping("/imageUpload")
     public String uploadImage(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+
         /*
         public String uploadImage(@RequestParam("base64Image") String base64Image){
 
-         imageResponse=imageResponse.sendImageToTritonServer(base64Image)
+        imageResponse=imageResponse.sendImageToTritonServer(base64Image)
 
-         imageResponse.setType("json");
+        imageResponse.setType("json");
 
-          }
-
-         */
+        }
+        */
 
         //이미지 파일 S3에 업로드
         String url = imageService.uploadFileToS3(imageFile);

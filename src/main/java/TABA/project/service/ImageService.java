@@ -27,6 +27,7 @@ public class ImageService {
     public String uploadFileToS3(MultipartFile multipartFile) throws IOException {
         String originalFilename = multipartFile.getOriginalFilename();
 
+        /*
         //S3에 이미지 파일 업로드
         try {
 
@@ -38,6 +39,9 @@ public class ImageService {
 
         //DB저장
         saveToSqliteDB(amazonS3.getUrl(bucket, originalFilename).toString());
+        */
+
+        saveToSqliteDB("Hello!!DB~~~~");
 
         return amazonS3.getUrl(bucket, originalFilename).toString();
     }
