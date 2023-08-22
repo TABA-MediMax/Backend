@@ -5,10 +5,7 @@ CREATE TABLE "image" (
 );
 
 CREATE TABLE "member" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"email"	TEXT NOT NULL,
-	"agreed_to_all"	boolean NOT NULL,
-	"agreed_to_optional_third_party"	boolean,
-	"agreed_to_service_access"	boolean,
-	PRIMARY KEY("id" AUTOINCREMENT)
+    "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "email"	TEXT NOT NULL,
+    "nickname" TEXT NOT NULL
 );

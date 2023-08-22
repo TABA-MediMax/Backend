@@ -18,12 +18,12 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickName;
+    private String nickname;
     private String email;
 
     // 생성자 추가 (필요한 경우)
-    public Member(String nickName, String email) {
-        this.nickName = nickName;
+    public Member(String nickname, String email) {
+        this.nickname=nickname;
         this.email = email;
     }
 }

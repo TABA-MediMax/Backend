@@ -17,8 +17,8 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Member signUp(String nickName, String email) {
-        Member newMember = new Member(nickName, email);
+    public Member signUp(String nickname, String email) {
+        Member newMember = new Member(nickname, email);
         return memberRepository.save(newMember);
     }
 
@@ -29,9 +29,5 @@ public class MemberService {
         return memberRepository.findByEmail(email).isPresent();
     }
 
-
-
-
-    // ... 기타 필요한 메서드 구현
 }
 

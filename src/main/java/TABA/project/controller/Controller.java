@@ -2,6 +2,7 @@ package TABA.project.controller;
 
 import TABA.project.domain.Member;
 import TABA.project.service.*;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 public class Controller {
@@ -47,8 +50,8 @@ public class Controller {
         */
 
         //이미지 파일 S3에 업로드
-      // String url = imageService.uploadFileToS3(imageFile);
-       // System.out.println(url);
+        // String url = imageService.uploadFileToS3(imageFile);
+        // System.out.println(url);
 
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setDl_company("경동제약(주)");
@@ -72,33 +75,31 @@ public class Controller {
         // 검색 결과를 그대로 반환
         return searchResponse;
     }
-    @PostMapping("/kakao")
-    public void kakaoCallback(@RequestParam String code) {
 
+
+    @PostMapping("/kakao")
+    public String kakaoCallback(@RequestParam String code) {
         String accessToken = oAuthService.getKakaoAccessToken(code);
 
-        // 액세스 토큰을 사용하여 사용자 정보 조회
-        try {
-            oAuthService.createKakaoUser(accessToken);
-        } catch (IOException e) {
-            e.printStackTrace();
+        // 사용자 정보를 가져옴
+        HashMap<String, Object> userInfo = oAuthService.getUserInfo(accessToken);
+
+        String email = (String) userInfo.get("email");
+        String nickName = (String) userInfo.get("nickName");
+
+        // Member 리포지토리에서 사용자가 존재하는지 확인
+        boolean isMemberExists = memberService.isMemberExists(email);
+
+        if (isMemberExists) {
+            // 로그인
+            System.out.println("로그인");
+        } else {
+            // 회원가입
+            memberService.signUp(nickName, email);
+            System.out.println("로그인 후 회원가");
         }
+
+        return email+nickName;
     }
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody Member request) {
-        if (request.getNickName() == null || request.getEmail() == null) {
-            return ResponseEntity.badRequest().body("닉네임과 이메일은 필수 정보입니다.");
-        }
-
-        if (memberService.findByEmail(request.getEmail()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 이메일입니다.");
-        }
-
-        Member newMember = memberService.signUp(request.getNickName(), request.getEmail());
-        return ResponseEntity.ok("회원 등록이 완료되었습니다.");
-    }
-
-
-
-
 }
+
