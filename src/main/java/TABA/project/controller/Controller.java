@@ -85,21 +85,21 @@ public class Controller {
         HashMap<String, Object> userInfo = oAuthService.getUserInfo(accessToken);
 
         String email = (String) userInfo.get("email");
-        String nickName = (String) userInfo.get("nickName");
-
+        String nickName = (String) userInfo.get("nickname");
+        System.out.println("닉네임 : " + nickName+" 이메일 : " + email);
         // Member 리포지토리에서 사용자가 존재하는지 확인
         boolean isMemberExists = memberService.isMemberExists(email);
 
         if (isMemberExists) {
             // 로그인
-            System.out.println("로그인");
+            return("로그인");
         } else {
             // 회원가입
             memberService.signUp(nickName, email);
-            System.out.println("로그인 후 회원가");
+            System.out.println("로그인 후 회원가입");
         }
 
-        return email+nickName;
+        return("완료");
     }
 }
 

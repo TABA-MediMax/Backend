@@ -14,11 +14,11 @@ import java.util.HashMap;
 public class OAuthService {
 
     public String getKakaoAccessToken(String code) {
-        String access_Token = "";
-        String refresh_Token = "";
+        String access_Token="";
+        String refresh_Token ="";
         String reqURL = "https://kauth.kakao.com/oauth/token";
 
-        try {
+        try{
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -30,8 +30,8 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=3a3e8312fcb1f54bdcf8aa4dcc082d73"); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://localhost:8080/auth/kakao/callback"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&client_id=3a3e8312fcb1f54bdcf8aa4dcc082d73");
+            sb.append("&redirect_uri=http://localhost:8080/auth/kakao/callback");
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -39,7 +39,6 @@ public class OAuthService {
             //결과 코드가 200이라면 성공
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
-
             //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line = "";
@@ -62,11 +61,11 @@ public class OAuthService {
 
             br.close();
             bw.close();
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         }
 
-        return access_Token; // 인가코드를 통해서 엑세스 토큰 받아오기
+        return access_Token;
     }
 
 
@@ -102,13 +101,13 @@ public class OAuthService {
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String profile_image = properties.getAsJsonObject().get("profile_image").getAsString();
-            String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            String nickname = properties.get("nickname").getAsString();
+
+            String email = kakao_account.get("email").getAsString();
 
             userProfile.put("nickname", nickname);
             userProfile.put("email", email);
-            userProfile.put("profile_image", profile_image);
+
 
         } catch (IOException e) {
                 System.out.print("오류");
