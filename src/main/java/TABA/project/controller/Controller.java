@@ -42,7 +42,7 @@ public class Controller {
         /*
         public String uploadImage(@RequestParam("base64Image") String base64Image){
 
-        imageResponse=imageResponse.sendImageToTritonServer(base64Image)
+        imageResponse=tritonService.sendImageToTritonServer(base64Image)
 
         imageResponse.setType("json");
 

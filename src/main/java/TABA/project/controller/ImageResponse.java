@@ -33,7 +33,7 @@ public class ImageResponse {
         return item_seq;
     }
 
-    public void setItem_seq(String dl_mapping_code) {
-        this.item_seq = dl_mapping_code;
+    public void setItem_seq(String item_seq) {
+        this.item_seq = item_seq;
     }
 }

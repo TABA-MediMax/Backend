@@ -122,3 +122,48 @@ public class TritonService {
 //        }
 //    }
 //}
+// ... (이전 코드 생략)
+//
+//@Service
+//public class TritonService {
+//
+//    private final String TRITON_URL = "http://triton-server-url/api"; // Triton 서버의 URL로 변경
+//    private final String API_KEY = "your-api-key"; // 실제 API 키로 변경해야 합니다
+//
+//    @Autowired
+//    private RestTemplate restTemplate;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
+//
+//    public ImageResponse sendImageToTritonServer(String base64Image) {
+//        try {
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            headers.set("Authorization", "Bearer " + API_KEY); // API 키를 헤더에 추가
+//
+//            // JSON 요청 바디 생성
+//            Map<String, String> requestBody = new HashMap<>();
+//            requestBody.put("base64Image", base64Image);
+//
+//            HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+//
+//            ResponseEntity<String> response = restTemplate.postForEntity(TRITON_URL, requestEntity, String.class);
+//
+//            // ... (이후 코드는 이전과 동일)
+//
+//        } catch (RestClientException e) {
+//            // 네트워크 통신 오류 처리
+//            System.out.println("Network communication error: " + e.getMessage());
+//            return null;
+//        } catch (JsonProcessingException e) {
+//            // JSON 파싱 오류 처리
+//            System.out.println("JSON processing error: " + e.getMessage());
+//            return null;
+//        } catch (Exception e) {
+//            // 기타 예외 처리
+//            System.out.println("Unexpected error: " + e.getMessage());
+//            return null;
+//        }
+//    }
+//}
