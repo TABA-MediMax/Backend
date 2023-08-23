@@ -37,32 +37,14 @@ public class Controller {
     }
 
     @PostMapping("/imageUpload")
-    public String uploadImage(@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+    public String uploadImage(@RequestParam("base64Image") String base64Image) {
 
-        /*
-        public String uploadImage(@RequestParam("base64Image") String base64Image){
-
-        imageResponse=tritonService.sendImageToTritonServer(base64Image)
-
-        imageResponse.setType("json");
-
-        }
-        */
-
+        ImageResponse imageResponse;
+        imageResponse = tritonService.sendImageToTritonServer(base64Image);
         //이미지 파일 S3에 업로드
         // String url = imageService.uploadFileToS3(imageFile);
         // System.out.println(url);
-
-        ImageResponse imageResponse = new ImageResponse();
-        imageResponse.setDl_company("경동제약(주)");
-        imageResponse.setItem_seq("200902301");
-        imageResponse.setDl_name("그날엔정");
-        imageResponse.setType("json");
-        // Triton 부분이 아직 미완성이라서 일단 임시로 이렇게 해놓음
-
-
         String jsonResponse = informationService.sendInformation(imageResponse);
-
         // JSON 응답을 그대로 반환
         return jsonResponse;
     }
