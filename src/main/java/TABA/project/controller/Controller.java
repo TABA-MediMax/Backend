@@ -1,20 +1,15 @@
 package TABA.project.controller;
 
-import TABA.project.domain.Member;
 import TABA.project.service.*;
-import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
-import java.util.Optional;
+
 
 @RestController
 public class Controller {
@@ -26,27 +21,72 @@ public class Controller {
 
     private final MemberService memberService;
 
+    private final item_seqSearchService itemseqSearchService;
     @Autowired
-    public Controller(OAuthService oAuthService, OAuthService oAuthService1, TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService, MemberService memberService) {
+    public Controller(OAuthService oAuthService, OAuthService oAuthService1, TritonService tritonService, InformationService informationService, textSearchService textSearchService, ImageService imageService, MemberService memberService, item_seqSearchService itemseqSearchService) {
         this.oAuthService = oAuthService1;
         this.tritonService = tritonService;
         this.informationService = informationService;
         this.textSearchService = textSearchService;
         this.imageService = imageService;
         this.memberService = memberService;
+        this.itemseqSearchService = itemseqSearchService;
     }
 
     @PostMapping("/imageUpload")
-    public String uploadImage(@RequestParam("base64Image") String base64Image) {
+    public String uploadImage(@RequestParam("Image") MultipartFile imageFile) {
 
-        ImageResponse imageResponse;
-        imageResponse = tritonService.sendImageToTritonServer(base64Image);
+        if (!imageFile.isEmpty()) {
+            try {
+                String userLocalPath = "C:/python/image/"; //사진 저장 경로
+                File userImageFile = new File(userLocalPath+imageFile.getOriginalFilename());
+                System.out.println(imageFile.getOriginalFilename());
+                if (!userImageFile.exists()) {
+                    userImageFile.mkdirs(); // 디렉토리가 없으면 생성
+                }
+                //사진저장
+                imageFile.transferTo(userImageFile);
+                System.out.println("Saving image");
+                // 파이썬 스크립트 호출
+
+                String pythonScriptPath = "C:/python/model_script.py";
+                String imageAbsolutePath = userImageFile.getAbsolutePath();
+                System.out.println("Calling Python");
+
+                ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath, imageAbsolutePath);
+
+                Process process = processBuilder.start(); //스크립트 실행
+
+
+                 InputStream inputStream = process.getInputStream();
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                 String line;
+                 StringBuilder output = new StringBuilder();
+                 while ((line = reader.readLine()) != null) {
+                     output.append(line);
+                 }
+
+                // 프로세스 종료까지 대기
+                int exitCode = process.waitFor();
+
+                if (exitCode == 0) {
+                    String response=itemseqSearchService.searchText(output.toString());
+                    return response;
+                } else {
+                    // 파이썬 스크립트 실행 실패
+                    return "Error executing Python script.";
+                }
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+                return "Error uploading image or executing Python script.";
+            }
+        } else {
+            return "No image selected for upload.";
+        }
         //이미지 파일 S3에 업로드
         // String url = imageService.uploadFileToS3(imageFile);
         // System.out.println(url);
-        String jsonResponse = informationService.sendInformation(imageResponse);
-        // JSON 응답을 그대로 반환
-        return jsonResponse;
     }
 
     @PostMapping("/textSearch")

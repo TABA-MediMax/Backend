@@ -33,6 +33,8 @@ public class textSearchService {
             StringBuilder urlBuilder = new StringBuilder(apiUrl);
             urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "="+apiKey);
             urlBuilder.append("&" + URLEncoder.encode("itemName","UTF-8") + "=" + URLEncoder.encode(text, "UTF-8"));
+            urlBuilder.append("&" + URLEncoder.encode("type","UTF-8") + "=" + URLEncoder.encode("json", "UTF-8"));
+
             // 파라미터를 url 에 추가함
             URL url = new URL(urlBuilder.toString());
             //실제 url 생성

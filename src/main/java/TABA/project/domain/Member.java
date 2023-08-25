@@ -21,9 +21,13 @@ public class Member {
     private String nickname;
     private String email;
 
+    //먹는 약 제품 이름
+
     // 생성자 추가 (필요한 경우)
     public Member(String nickname, String email) {
         this.nickname=nickname;
         this.email = email;
     }
+
+
 }
